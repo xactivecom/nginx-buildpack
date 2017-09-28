@@ -48,7 +48,7 @@ The build of NGINX is performed on an Ubuntu 16 distribution.
 
 1. Build and install NGINX
 
-   Compiles NGINX to /usr/local/sbin/nginx, and populates defult configuration to /usr/local/conf.
+   Compile NGINX to /usr/local/sbin/nginx, and populate defult configuration to /usr/local/conf.
 
     ```bash
     make
@@ -57,37 +57,36 @@ The build of NGINX is performed on an Ubuntu 16 distribution.
 
 1. Package NGINX for buildpack
 
-   Copy the NGINX executible into the directory structure
-     nginx/
-     nginx/conf/
-     nginx/logs/
-     nginx/sbin/
-     nginx/sbin/nginx
-     sources.yml
+   Copy the NGINX executible into the following directory structure:
+
+    ```bash
+    nginx/
+    nginx/conf/
+    nginx/logs/
+    nginx/sbin/
+    nginx/sbin/nginx
+    sources.yml
+    ```
+
+   Create a compressed tarball, and compute MD5 hash:
 
     ```bash
     tar cvzf nginx-1.13.5-linux-x64.tgz nginx
     md5sum nginx-1.13.5-linux-x64.tgz
     ```
 
-   Make the NGINX package available as an externally downloadable URL (details not shown).
+   Make the NGINX package available as an externally downloadable URL (details not shown). For example, https://myhealthrecords.services/dependencies/nginx/nginx-1.13.5-linux-x64.tgz.
 
 1. Update buildpack manifest
 
-   Update the buildpack dependencies section of the manifest.yml with the NGINX package URL and MD5 hash.
+   Update the buildpack dependencies nginx section of the manifest.yml with the NGINX package URL and MD5 hash.
 
-     ---
-     language: staticfile
-     default_versions:
-     - name: nginx
-       version: 1.13.5
-     dependencies:
-     - name: nginx
-       version: 1.13.5
-       uri: https://myhealthrecords.services/dependencies/nginx/nginx-1.13.5-linux-x64.tgz
-       md5: b208e766191d113a142725a2b42f7a37
-       cf_stacks:
-       - cflinuxfs2
+    ```bash
+    \- name: nginx
+      version: 1.13.5
+      uri: https://myhealthrecords.services/dependencies/nginx/nginx-1.13.5-linux-x64.tgz
+      md5: b208e766191d113a142725a2b42f7a37
+    ```
 
 ### Acknowledgements
 
