@@ -8,7 +8,7 @@ Official buildpack documentation can be found at [staticfile buildpack docs](htt
 
 ### Building NGINX
 
-The build of NGINX is performed on an Ubuntu distribution.
+The build of NGINX is performed on an Ubuntu 16 distribution.
 
 1. Download and unpack the dependencies to the /usr/local directory
 
@@ -46,22 +46,49 @@ The build of NGINX is performed on an Ubuntu distribution.
      --with-zlib=../zlib-1.2.11
    ```
 
-1. Build NGINX
+1. Build and install NGINX
+
+   Compiles NGINX to /usr/local/sbin/nginx, and populates defult configuration to /usr/local/conf.
 
     ```bash
     make
     make install
     ```
 
-1. Use in Cloud Foundry
+1. Package NGINX for buildpack
 
-   Upload the buildpack to your Cloud Foundry and optionally specify it by name
+   Copy the NGINX executible into the directory structure
+     nginx/
+     nginx/conf/
+     nginx/logs/
+     nginx/sbin/
+     nginx/sbin/nginx
+     sources.yml
 
     ```bash
-    cf create-buildpack [BUILDPACK_NAME] [BUILDPACK_ZIP_FILE_PATH] 1
-    cf push my_app [-b BUILDPACK_NAME]
+    tar cvzf nginx-1.13.5-linux-x64.tgz nginx
+    md5sum nginx-1.13.5-linux-x64.tgz
     ```
+
+   Make the NGINX package available as an externally downloadable URL (details not shown).
+
+1. Update buildpack manifest
+
+   Update the buildpack dependencies section of the manifest.yml with the NGINX package URL and MD5 hash.
+
+     ---
+     language: staticfile
+     default_versions:
+     - name: nginx
+       version: 1.13.5
+     dependencies:
+     - name: nginx
+       version: 1.13.5
+       uri: https://myhealthrecords.services/dependencies/nginx/nginx-1.13.5-linux-x64.tgz
+       md5: b208e766191d113a142725a2b42f7a37
+       cf_stacks:
+       - cflinuxfs2
 
 ### Acknowledgements
 
-This buildpack is based heavily upon Jordon Bedwell's Heroku buildpack and the modifications by David Laing for Cloud Foundry [nginx-buildpack](https://github.com/cloudfoundry-community/nginx-buildpack). It has been tuned for usability (configurable with `Staticfile`) and to be included as a default buildpack (detects `Staticfile` rather than the presence of an `index.html`). Thanks for the buildpack Jordon!
+This buildpack is based upon the Cloud Foundry [staticfile-buildpack](https://github.com/cloudfoundry/staticfile-buildpack).
