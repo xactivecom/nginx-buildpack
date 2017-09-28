@@ -82,10 +82,11 @@ The build of NGINX is performed on an Ubuntu 16 distribution.
    Update the buildpack dependencies nginx section of the manifest.yml with the NGINX package URL and MD5 hash.
 
     ```bash
-    \- name: nginx
+    name: nginx
       version: 1.13.5
       uri: https://myhealthrecords.services/dependencies/nginx/nginx-1.13.5-linux-x64.tgz
       md5: b208e766191d113a142725a2b42f7a37
+      ...
     ```
 
 ### Acknowledgements
